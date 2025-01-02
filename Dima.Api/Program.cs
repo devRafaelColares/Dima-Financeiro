@@ -1,5 +1,7 @@
+using Azure;
 using Dima.Api.Data;
 using Dima.Core.Models;
+using Dima.Core.Requests.Categories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,46 +31,12 @@ app.MapGet("/", () => "Hello World!");
 
 app.MapPost
         ("/v1/categories",
-        (Request request, Handler handler) => handler.Handle(request))
+        (CreateCategoryRequest request, Handler handler) => handler.Handle(request))
         .WithName("CreateCategories")
         .WithSummary("Create a new category")
-        .Produces<Response>();
+        .Produces<Response<Category>>();
 
 
 
 app.Run();
 
-
-public class Request
-{
-    public string Title { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-}
-
-public class Response
-{
-    public long Id { get; set; }
-    public string Title { get; set; } = string.Empty;
-
-}
-
-public class Handler(AppDbContext context)
-{
-    public Response Handle(Request request)
-    {
-        var category = new Category
-        {
-            Title = request.Title,
-            Description = request.Description,
-        };
-
-        context.Categories.Add(category);
-        context.SaveChanges();
-
-        return new Response
-        {
-            Id = category.Id,
-            Title = category.Title,
-        };
-    }
-}
