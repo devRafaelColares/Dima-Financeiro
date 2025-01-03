@@ -60,14 +60,48 @@ namespace Dima.Api.Handlers
 
         public async Task<Response<Category?>> GetCategoryByIdAsync(GetCategoryByIdRequest request)
         {
-            // Implement your logic here
-            return new Response<Category>();
+            try
+            {
+                var category = await context.Categories
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == request.UserId);
+
+                return category is null 
+                    ? new Response<Category?>(null, 404, "Categoria não encontrada") 
+                    : new Response<Category?>(category);
+            }
+            catch
+            {
+                
+                return new Response<Category?>(null, 500, "Erro ao excluir categoria");
+            }
         }
 
-        public async Task<Response<List<Category>>> GetAllCategoriesAsync(GetAllCategoriesRequest request)
+        public async Task<PagedResponse<List<Category>>> GetAllCategoriesAsync(GetAllCategoriesRequest request)
         {
-            // Implement your logic here
-            return new Response<List<Category>>();
+            try
+            {
+                var query = context.Categories
+                    .AsNoTracking()
+                    .Where(x => x.UserId == request.UserId)
+                    .OrderBy(x => x.Title);
+
+                var categories = await query
+                    .Skip((request.PageNumber -1) * request.PageSize)
+                    .Take(request.PageSize)
+                    .ToListAsync();
+
+                var count = await query.CountAsync();
+
+                return new PagedResponse<List<Category>>(
+                    categories,
+                    count, request.PageNumber,
+                    request.PageSize);
+            }
+            catch
+            {
+                return new PagedResponse<List<Category>>(null, 500, "Erro ao buscar categorias");
+            }
         }
 
         public async Task<Response<Category?>> DeleteCategoryAsync(DeleteCategoryRequest request)
