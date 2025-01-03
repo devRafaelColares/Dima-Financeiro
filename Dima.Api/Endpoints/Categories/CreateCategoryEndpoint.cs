@@ -18,8 +18,11 @@ namespace Dima.Api.Endpoints.Categories
 
         private static async Task<IResult> HandleAsync(ICategoryHandler handler, CreateCategoryRequest request)
         {
+            request.UserId = "test@balta.io";
             var result = await handler.CreateCategoryAsync(request);
-            return result.IsSuccess ? TypedResults.Created($"/{result.Data?.Id}", result.Data) : TypedResults.BadRequest(result.Data);
+            return result.IsSuccess 
+                ? TypedResults.Created($"/{result.Data?.Id}", result) 
+                : TypedResults.BadRequest(result);
         }
     }
 }

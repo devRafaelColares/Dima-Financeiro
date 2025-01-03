@@ -12,7 +12,11 @@ namespace Dima.Api.Endpoints
             endpoints.MapGroup("v1/categories")
                 .WithTags("Categories")
                 // .RequireAuthorization()
-                .MapEndpoint<CreateCategoryEndpoint>();
+                .MapEndpoint<CreateCategoryEndpoint>()
+                .MapEndpoint<UpDateCategoryEndpoint>()
+                .MapEndpoint<DeleteCategoryEndpoint>()
+                .MapEndpoint<GetCategoryByIdEndpoint>()
+                .MapEndpoint<GetAllCategoriesEndpoint>();
         }
 
         private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder app)
