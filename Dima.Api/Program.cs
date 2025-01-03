@@ -29,14 +29,37 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapGet("/", () => "Hello World!");
-
 app.MapPost
-        ("/v1/categories",
-        (CreateCategoryRequest request, ICategoryHandler handler) => handler.CreateCategoryAsync(request))
+        ("/v1/categories", async
+        (CreateCategoryRequest request, ICategoryHandler handler) => await
+        handler.CreateCategoryAsync(request))
         .WithName("CreateCategories")
         .WithSummary("Create a new category")
-        .Produces<Response<Category>>();
+        .Produces<Response<Category?>>();
+
+app.MapPut
+        ("/v1/categories{id}", async
+        (long id,
+        UpdateCategoryRequest request, ICategoryHandler handler) => 
+        {
+            request.Id = id;
+            return await handler.UpdateCategoryAsync(request);
+        })
+        .WithName("UpdateCategories")
+        .WithSummary("Update a category")
+        .Produces<Response<Category?>>();
+
+app.MapDelete
+        ("/v1/categories{id}", async
+        (long id,
+        ICategoryHandler handler) => 
+        {
+            var request = new DeleteCategoryRequest { Id = id, UserId = "teste@balta.io" };
+            return await handler.DeleteCategoryAsync(request);
+        })
+        .WithName("DeleteCategories")
+        .WithSummary("Delete a category")
+        .Produces<Response<Category?>>();
 
 
 
