@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using Dima.Core.Enums;
 
-namespace Dima.Core.Requests.Categories
+namespace Dima.Core.Requests.Transactions
 {
-    public class CreationTransactionRequest : Request
+    public class CreateTransactionRequest : Request
     {   
         [Required(ErrorMessage = "Título inválido.")]
         public string Title { get; set; } = string.Empty;
