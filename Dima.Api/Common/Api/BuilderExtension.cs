@@ -1,5 +1,6 @@
 using Dima.Api.Data;
 using Dima.Api.Handlers;
+using Dima.Api.Models;
 using Dima.Core;
 using Dima.Core.Handlers;
 using Microsoft.AspNetCore.Identity;
@@ -38,6 +39,11 @@ namespace Dima.Api.Common.Api;
                 {
                     x.UseSqlServer(Configuration.ConnectionString);
                 });
+                
+                builder.Services.AddIdentityCore<User>()
+                .AddRoles<IdentityRole<long>>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddApiEndpoints();
         }
 
         public static void AddCrossOrigin(this WebApplicationBuilder builder)
