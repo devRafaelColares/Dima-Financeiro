@@ -39,7 +39,7 @@ namespace Dima.Api.Endpoints
                 .MapIdentityApi<User>();
 
             endpoints.MapGroup("v1/identity")
-                .WithTags("5. Identity")
+                .WithTags("4. Identity")
                 .MapEndpoint<LogoutEndpoint>()
                 .MapEndpoint<GetRolesEndpoint>();
 
